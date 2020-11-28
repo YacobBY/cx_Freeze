@@ -50,7 +50,7 @@ class build_ext(distutils.command.build_ext.build_ext):
         else:
             libraryDirs.append(get_config_var("LIBPL"))
             abiflags = getattr(sys, "abiflags", "")
-            if get_config_var("LIBRARY") and sys.platform != "darwin":
+            if get_config_var("LIBRARY") and sys.platform == "darwin":
                 libraries.append(get_config_var("LIBRARY"))
             else:
                 libraries.append(
