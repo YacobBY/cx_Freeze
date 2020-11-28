@@ -65,6 +65,10 @@ class build_ext(distutils.command.build_ext.build_ext):
             if get_config_var("LOCALMODLIBS"):
                 extraArgs.extend(get_config_var("LOCALMODLIBS").split())
             extraArgs.append("-s")
+            if sys.platform == "darwin":
+                extraArgs.append("-static-libgcc")
+            else:
+                extraArgs.append("-s")
         self.compiler.link_executable(
             objects,
             fullName,
