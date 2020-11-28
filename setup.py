@@ -50,10 +50,13 @@ class build_ext(distutils.command.build_ext.build_ext):
         else:
             libraryDirs.append(get_config_var("LIBPL"))
             abiflags = getattr(sys, "abiflags", "")
-            libraries.append(
-                "python%s.%s%s"
-                % (sys.version_info[0], sys.version_info[1], abiflags)
-            )
+            if get_config_var("LIBRARY") and sys.platform != "darwin":
+                libraries.append(get_config_var("LIBRARY"))
+            else:
+                libraries.append(
+                    "python%s.%s%s"
+                    % (sys.version_info[0], sys.version_info[1], abiflags)
+                )
             if get_config_var("LINKFORSHARED") and sys.platform != "darwin":
                 extraArgs.extend(get_config_var("LINKFORSHARED").split())
             if get_config_var("LIBS"):
@@ -65,10 +68,6 @@ class build_ext(distutils.command.build_ext.build_ext):
             if get_config_var("LOCALMODLIBS"):
                 extraArgs.extend(get_config_var("LOCALMODLIBS").split())
             extraArgs.append("-s")
-            if sys.platform == "darwin":
-                extraArgs.append("-static-libgcc")
-            else:
-                extraArgs.append("-s")
         self.compiler.link_executable(
             objects,
             fullName,
